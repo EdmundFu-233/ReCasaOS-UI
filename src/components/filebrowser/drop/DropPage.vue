@@ -143,12 +143,10 @@ export default {
 	methods: {
 		// Init Ws Server
 		initServer() {
-			const access_token = localStorage.getItem("access_token");
-			const url = `${this.$wsProtocol}//${this.$baseURL}/v1/file/ws?token=${access_token}&peer=${this.selfId}`;
-			console.log(url);
-			
-			//   const url = `${this.$wsProtocol}//192.168.2.243/v1/file/ws?token=${access_token}&peer=${this.selfId}`;
-			//   const url = `ws://localhost:3000/server/webrtc?peer=${this.selfId}`;
+			// The file-drop WebSocket carries no credential in its URL: the
+			// backend ignores query tokens, and logging a token-bearing URL
+			// would persist it in diagnostics.
+			const url = `${this.$wsProtocol}//${this.$baseURL}/v1/file/ws?peer=${this.selfId}`;
 			this.webscoketServer = new ServerConnection(url, this.$EventBus);
 			// const peers = new PeersManager(server);
 			this.peersManager = new PeersManager(this.webscoketServer, this.$EventBus);

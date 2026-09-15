@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import qs from 'qs'
 import 'xterm/css/xterm.css'
 import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
@@ -93,6 +92,8 @@ export default {
 
 	},
 	beforeDestroy() {
+		this.sshUser = ""
+		this.sshPassword = ""
 		if (this.isVaild) {
 			this.socket.close()
 		}
@@ -113,8 +114,13 @@ export default {
 				await this.$api.sys.checkSshLogin(postData)
 				this.isConnecting = false
 				this.isVaild = true
-				postData.token = this.$store.state.access_token
-				this.wsUrl = `${this.$wsProtocol}//${this.$baseURL}/v1/sys/wsssh?${qs.stringify(postData)}`
+				// Credentials travel once in the authenticated POST body, which
+				// mints a one-use HttpOnly cookie ticket. The WebSocket URL
+				// carries nothing: the backend ignores query credentials and
+				// consumes the ticket (or a first-frame handshake). The
+				// password is wiped from memory immediately.
+				this.sshPassword = ""
+				this.wsUrl = `${this.$wsProtocol}//${this.$baseURL}/v1/sys/wsssh`
 				this.initSocket();
 			} catch (error) {
 				this.notificationShow = true
