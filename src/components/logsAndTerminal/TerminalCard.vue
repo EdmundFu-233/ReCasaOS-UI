@@ -118,7 +118,9 @@ export default {
 				// mints a one-use HttpOnly cookie ticket. The WebSocket URL
 				// carries nothing: the backend ignores query credentials and
 				// consumes the ticket (or a first-frame handshake). The
-				// password is wiped from memory immediately.
+				// password is cleared from component state immediately (note:
+				// JS strings are GC-managed, so this drops the reference
+				// rather than wiping memory).
 				this.sshPassword = ""
 				this.wsUrl = `${this.$wsProtocol}//${this.$baseURL}/v1/sys/wsssh`
 				this.initSocket();
