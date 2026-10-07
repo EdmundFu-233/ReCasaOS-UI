@@ -3,79 +3,13 @@
 		<figure class="image _is-136x26 mb-3">
 			<img alt="logo" srcset="../assets/img/logo/logo.svg 2x, ../assets/img/logo/logo.png 1x">
 		</figure>
-		<span v-if="!rssShow || rss.length === 0" class="intro-text ml-4">Made with ❤️ by IceWhale and YOU!</span>
-		<span v-else class="window ml-4">
-			<ul :style="{ '--time': 5 * line + 's', '--perc': perc, '--line': line }" class="scroll">
-				<li v-for="(item, key) in rss" :key="key" class="has-text-left" @click="$messageBus('connect_news')">
-					<a @click="gotoLink(item.link)" class="intro-text is-clickable" target="_blank"
-						rel="noopener noreferrer">
-						{{ item.title }}
-					</a>
-				</li>
-			</ul>
-		</span>
-
+		<span class="intro-text ml-4">Made with ❤️ by IceWhale and YOU!</span>
 	</div>
 </template>
 
 <script>
-import DOMPurify from 'dompurify';
-import { parse} from 'rss-to-json'
 export default {
 	name: "brand-bar",
-	components: {},
-	computed: {
-		rssShow() {
-			let which = this.$store.state.rssSwitch
-			if (which) {
-				this.parseFeed()
-			}
-			return which
-		},
-		line() {
-			return this.rss.length
-		},
-		perc() {
-			return -(this.line - 1) / this.line * 100 + '%'
-		},
-		isShow() {
-			return this.$route.path !== '/login' || this.$route.path !== '/welcome'
-		},
-	},
-	watch: {
-		isShow(val) {
-			val && this.parseFeed()
-		}
-	},
-	data() {
-		return {
-			rss: [],
-		};
-	},
-	methods: {
-		async parseFeed() {			
-			let params = await this.$api.file.getContent('/var/lib/casaos/baseinfo.conf').then(res => {
-				return JSON.parse(res.data.data)
-			})
-			this.$store.commit('SET_DEVICE_ID', params.i)
-			params.l = localStorage.getItem('lang') ? localStorage.getItem('lang') : navigator.language.toLowerCase().replace("-", "_");
-			let stringify = btoa(encodeURIComponent(JSON.stringify(params)))
-			let feed = await parse('https://blog-casaos.zimaspace.com/feed/tag/dashboard/?key=' + stringify)
-			const newFeed = feed.items.map(item => {
-				return {
-					title: item.title,
-					link: DOMPurify.sanitize(item.link, { ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.1-9]+(?:[^a-z+.1-9]|$))/i })
-				}
-			})
-			this.rss = newFeed
-			
-			
-		},
-
-		gotoLink(link) {
-			window.open(link, '_blank')
-		}
-	}
 }
 </script>
 

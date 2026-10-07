@@ -13,20 +13,6 @@
 		<section class="modal-card-body ">
 			<div class="node-card  mt-5 mb-5">
 				<div class="update-info-container  is-size-14px " v-dompurify-html="markdownToHtml"></div>
-				<div class="mt-2rem">
-					<h3 class="title is-5 mb-2">{{ $t('Let more friends know') }}</h3>
-					<div class=" is-size-14px">{{ $t('Please share to friends who are concerned about family and data privacy to join and use CasaOS.') }}
-					</div>
-				</div>
-
-				<div class="buttons is-justify-content-center mb-6 mt-4">
-					<ShareNetwork v-for="site in shareSites" :network="site" :key="site" :url="githubUrl"
-						:title="shareTitle" hashtags="homecloud,opensource">
-						<b-button icon-pack="casa" :icon-left="site" :type="`is-${site}`" class="ml-3 mr-3">
-							Share
-						</b-button>
-					</ShareNetwork>
-				</div>
 
 			</div>
 		</section>
@@ -49,13 +35,6 @@ export default {
 			timer: 0,
 			updateTimer: 0,
 			markdown: ``,
-			githubUrl: `https://github.com/IceWhaleTech/CasaOS`,
-			shareTitle: `I'm using CasaOS, a simple, easy-to-use, elegant open-source home cloud system, try it like me.`,
-			shareSites: [
-				'facebook',
-				'twitter',
-				'reddit'
-			]
 		};
 	},
 	computed: {

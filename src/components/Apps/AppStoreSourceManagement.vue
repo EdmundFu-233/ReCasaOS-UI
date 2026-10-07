@@ -85,13 +85,6 @@ function unregisterAppStore(id) {
 	})
 }
 
-function redirectURL() {
-	if (sourceDorpRef.value) {
-		sourceDorpRef.value.toggle();
-	}
-	window.open("https://awesome.casaos.io/content/3rd-party-app-stores/list.html", "_blank", "noopener");
-}
-
 function activeInput() {
 	if (componentState.value === "active_input_state") {
 		app.$refs.inputSourceURL.focus()
@@ -194,23 +187,12 @@ onBeforeUnmount(() => {
 						}}
 						</span>
 					</b-dropdown-item>
-					<b-dropdown-item @click="redirectURL">
-						<span class="one-line"> {{
-							$t("More")
-						}}
-						</span>
-					</b-dropdown-item>
 				</b-dropdown>
 			</div>
 			<div v-else-if="componentState === 'active_input_state'" key="3" class="is-flex is-align-items-center">
 				<b-field class="mb-0">
 					<b-input class="_sources_input" ref="inputSourceURL" v-model="url" :disabled="addLoadingState"
 						v-on:keyup.enter.native="registerAppStore(url)"></b-input>
-					<b-tooltip label="Get more apps" position="is-bottom" class="add-tooltip" type="is-dark"
-						:class="{ disabled: addLoadingState }">
-						<b-icon class="is-clickable" icon="question-outline" pack="casa" size="is-small"
-							@click.native="redirectURL" />
-					</b-tooltip>
 					<p class="control">
 						<b-button class="_sources_input" @click="registerAppStore(url)" :loading="addLoadingState">{{
 							$t("Add") }}</b-button>

@@ -4,7 +4,6 @@ import sortBy from 'lodash/sortBy'
 import noticeBlock from '@/components/noticBlock/noticeBlock'
 import { mixin } from '@/mixins/mixin'
 import SyncBlock from '@/components/syncthing/SyncBlock.vue'
-import SmartBlock from '@/components/smartHome/SmartBlock.vue'
 import events from '@/events/events'
 import Business_ShowNewAppTag from '@/mixins/app/Business_ShowNewAppTag'
 import DiskLearnMore from '@/components/Storage/DiskLearnMore.vue'
@@ -12,7 +11,7 @@ import { ice_i18n } from '@/mixins/base/common-i18n'
 
 export default {
   name: 'CoreService',
-  components: { SmartBlock, SyncBlock, NoticeBlock: noticeBlock, Swiper, SwiperSlide },
+  components: { SyncBlock, NoticeBlock: noticeBlock, Swiper, SwiperSlide },
   mixins: [mixin, Business_ShowNewAppTag],
   inject: ['homeShowFiles'],
   data() {
@@ -570,9 +569,6 @@ export default {
     </SwiperSlide>
     <SwiperSlide v-if="recommendShow">
       <SyncBlock />
-    </SwiperSlide>
-    <SwiperSlide v-if="recommendShow">
-      <SmartBlock />
     </SwiperSlide>
     <template #pagination>
       <div v-show="recommendShow || noticeLength !== 0" class="swiper-pagination" />
