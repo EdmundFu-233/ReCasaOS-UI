@@ -539,7 +539,7 @@ export default {
 					type: 'is-danger'
 				})
 				console.error(err)
-			}).finaly(() => {
+			}).finally(() => {
 				this.isCreating = false
 			})
 		},
