@@ -35,7 +35,7 @@ instance.interceptors.request.use(
 		const token = localStorage.getItem("access_token")
 		const rtoken = localStorage.getItem("refresh_token")
 		if (token) {
-			config.headers.Authorization = token
+			config.headers.Authorization = "Bearer " + token
 			store.commit("SET_ACCESS_TOKEN", token);
 			store.commit("SET_REFRESH_TOKEN", rtoken);
 		}
@@ -81,8 +81,8 @@ instance.interceptors.response.use(
 
 						store.commit("SET_ACCESS_TOKEN", tokenRes.data.data.access_token);
 						store.commit("SET_REFRESH_TOKEN", tokenRes.data.data.refresh_token);
-						originalConfig.headers.Authorization = tokenRes.data.data.access_token
-						instance.defaults.headers.Authorization = tokenRes.data.data.access_token
+						originalConfig.headers.Authorization = "Bearer " + tokenRes.data.data.access_token
+						instance.defaults.headers.Authorization = "Bearer " + tokenRes.data.data.access_token
 						isRefreshing = false
 						return tokenRes.data.data.access_token
 					} else {
@@ -102,7 +102,7 @@ instance.interceptors.response.use(
 			return new Promise(resolve => {
 				requests.push((token) => {
 					originalConfig.headers = {}
-					originalConfig.headers.Authorization = token
+					originalConfig.headers.Authorization = "Bearer " + token
 					resolve(instance(originalConfig))
 				})
 			})

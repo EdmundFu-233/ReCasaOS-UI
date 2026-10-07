@@ -92,7 +92,7 @@ export default {
 			this.fileList = this.uploader.fileList
 			this.$api.sys.getVersion().then(res => {
 				if (this.autoStart && res.status === 200) {
-					this.uploader.opts.headers.Authorization = this.$store.state.access_token || localStorage.getItem("access_token")
+					this.uploader.opts.headers.Authorization = "Bearer " + (this.$store.state.access_token || localStorage.getItem("access_token"))
 					this.uploader.upload()
 				}
 			})

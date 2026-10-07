@@ -354,7 +354,7 @@ export default {
 			permanentErrors: [404, 409, 415, 500, 501],
 			allowDuplicateUploads: true,
 			headers: {
-				Authorization: this.token,
+				Authorization: this.token ? "Bearer " + this.token : this.token,
 			},
 			query: (file) => {
 				return {
@@ -400,7 +400,7 @@ export default {
 	watch: {
 		"$store.state.access_token": {
 			handler(val) {
-				this.options.headers.Authorization = val;
+				this.options.headers.Authorization = val ? "Bearer " + val : val;
 			},
 			deep: true,
 		},

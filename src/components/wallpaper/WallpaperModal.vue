@@ -98,7 +98,7 @@ export default {
 		this.uploader.on('filesSubmitted', () => {
 			this.isUpLoading = true
 			this.$api.sys.getVersion().then(res => {
-				this.uploader.opts.headers.Authorization = this.$store.state.access_token || localStorage.getItem("access_token")
+				this.uploader.opts.headers.Authorization = "Bearer " + (this.$store.state.access_token || localStorage.getItem("access_token"))
 				this.uploader.upload()
 			})
 		})
