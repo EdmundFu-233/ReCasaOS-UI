@@ -46,8 +46,13 @@ module.exports = {
 
 		config.plugin("define").use(require("webpack/lib/DefinePlugin"), [
 			{
-				"process.env": JSON.stringify(process.env),
-				BUILT_TIME: JSON.stringify(Date()),
+				// only vars the sources read; whole env leaked into the bundle, broke reproducibility
+				"process.env": JSON.stringify({
+					NODE_ENV: process.env.NODE_ENV,
+					VUE_APP_DEV_IP: process.env.VUE_APP_DEV_IP,
+					VUE_APP_DEV_PORT: process.env.VUE_APP_DEV_PORT,
+				}),
+				BUILT_TIME: JSON.stringify("reproducible"),
 			},
 		]);
 		// 添加 NodePolyfillPlugin wbepack5 专用插件
