@@ -167,7 +167,7 @@ export default {
 			const data = selectedList.map(item => {
 				return {
 					path: item.path,
-					anonymous: true
+					anonymous: false
 				}
 			})
 			try {

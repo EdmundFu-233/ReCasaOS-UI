@@ -230,7 +230,7 @@ export default {
 			this.$refs.dropDown.toggle()
 			const data = [{
 				path: this.item.path,
-				anonymous: true
+				anonymous: false
 			}]
 			try {
 				await this.$api.samba.createShare(data)
