@@ -12,6 +12,7 @@ import Vue2TouchEvents from 'vue2-touch-events'
 import VueSocialSharing from 'vue-social-sharing'
 import VueSocketIOExt from 'vue-socket.io-extended';
 import messageBus from '@/events/index.js'
+import {connectMessageBus} from '@/service/message_bus_socket.js'
 import VueDOMPurifyHTML from 'vue-dompurify-html'
 
 
@@ -32,9 +33,12 @@ const baseIp = isDev ? `${devIp}` : `${localhostName}`
 const baseURL = isDev ? `${devIp}:${devPort}` : `${localhost}`
 const wsURL = `${wsProtocol}//${baseURL}`
 
+// websocket only: 1 handshake = 1 one-use ticket (service/message_bus_socket.js); polling = ticket per request
 const socket = io( {
-	transports: ['websocket', 'polling'],
+	transports: ['websocket'],
 	path: '/v2/message_bus/socket.io/',
+	autoConnect: false,
+	reconnection: false,
 });
 
 Vue.use(Buefy)
@@ -42,6 +46,7 @@ Vue.use(VueFullscreen)
 Vue.use(VAnimateCss, { animateCSSPath: '/css/animate.min.css' });
 Vue.use(Vue2TouchEvents)
 Vue.use(VueSocketIOExt, socket);
+connectMessageBus(socket);
 Vue.use(VueSocialSharing);
 Vue.use(VueDOMPurifyHTML, {
 	default: {
