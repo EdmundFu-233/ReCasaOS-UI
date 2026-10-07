@@ -117,7 +117,7 @@ export default {
 							// set shared data
 							const data = [{
 								path: newPath,
-								anonymous: true
+								anonymous: false
 							}]
 							// save shared data
 							await this.$api.samba.createShare(data)

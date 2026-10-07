@@ -81,7 +81,10 @@
 						<b-dropdown-item v-if="!isShared" aria-role="menuitem" @click="shareFoler">
 							{{ $t('Share') }}
 						</b-dropdown-item>
-						<b-dropdown-item v-else aria-role="menuitem" class="has-text-danger" @click="unShare">
+						<b-dropdown-item v-if="isShared" aria-role="menuitem" @click="shareAccess">
+							{{ $t('Access') }}
+						</b-dropdown-item>
+						<b-dropdown-item v-if="isShared" aria-role="menuitem" class="has-text-danger" @click="unShare">
 							{{ $t('UnShare') }}
 						</b-dropdown-item>
 					</template>
@@ -108,6 +111,7 @@
 <script>
 import { mixin, wallpaperType } from '@/mixins/mixin';
 import has from 'lodash/has'
+import ShareAccessModal from '@/components/filebrowser/shared/ShareAccessModal.vue'
 
 export default {
 	mixins: [mixin],
@@ -226,23 +230,32 @@ export default {
 			const downItem = (this.items.length == 1) ? this.items[0] : this.items
 			this.downloadFile(downItem);
 		},
-		async shareFoler() {
+		// Share: who may open it — any share account, or one
+		shareFoler() {
 			this.$refs.dropDown.toggle()
-			const data = [{
-				path: this.item.path,
-				anonymous: true
-			}]
-			try {
-				await this.$api.samba.createShare(data)
+			this.openShareAccess({ path: this.item.path }, () => {
 				this.filePanel.reloadShare()
 				this.filePanel.getShareLink(this.item)
-			} catch (error) {
-				this.isSaving = false
-				this.$buefy.toast.open({
-					message: error.response.data.message,
-					type: 'is-danger'
-				})
-			}
+			})
+		},
+
+		shareAccess() {
+			this.$refs.dropDown.toggle()
+			this.openShareAccess({ id: this.item.extensions.share.id, path: this.item.path }, () => this.filePanel.reloadShare())
+		},
+
+		openShareAccess(share, onReload) {
+			this.$buefy.modal.open({
+				parent: this.filePanel,
+				component: ShareAccessModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
+				props: { share },
+				events: { reload: onReload },
+			})
 		},
 
 		unShare() {

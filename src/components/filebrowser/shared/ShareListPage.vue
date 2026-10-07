@@ -11,6 +11,7 @@
 			>
 				<h3 class="title is-header mb-0">{{ $t("Shared Folders") }}</h3>
 			</div>
+			<b-button class="mr-3" rounded size="is-small" @click="manageUsers">{{ $t("Share accounts") }}</b-button>
 			<b-icon class="close-button" icon="close-outline" pack="casa" @click.native="$emit('close');" />
 		</header>
 		<!-- Header End -->
@@ -43,6 +44,7 @@
 <script>
 import ShareListView from "./ShareListView.vue";
 import events        from "@/events/events";
+import SambaUsersModal from "./SambaUsersModal.vue";
 
 export default {
 	data() {
@@ -88,6 +90,18 @@ export default {
 
 		selectShare() {
 			this.$EventBus.$emit(events.SELECT_SHARE);
+		},
+
+		manageUsers() {
+			this.$buefy.modal.open({
+				parent: this,
+				component: SambaUsersModal,
+				hasModalCard: true,
+				trapFocus: true,
+				canCancel: ['escape'],
+				scroll: 'keep',
+				animation: 'zoom-in',
+			});
 		},
 	},
 };

@@ -43,5 +43,27 @@ const samba = {
 	deleteShare(id) {
 		return api.delete(`${PREFIX}/shares/${id}`);
 	},
+
+	// restrict to one share account ({ username }); "" lifts it
+	updateShare(id, data) {
+		return api.put(`${PREFIX}/shares/${id}`, data);
+	},
+
+	// share accounts: network shares only, separate from the CasaOS login
+	getUsers() {
+		return api.get(`${PREFIX}/users`);
+	},
+
+	createUser(data) {
+		return api.post(`${PREFIX}/users`, data);
+	},
+
+	setUserPassword(username, password) {
+		return api.put(`${PREFIX}/users/${encodeURIComponent(username)}/password`, { password });
+	},
+
+	deleteUser(username) {
+		return api.delete(`${PREFIX}/users/${encodeURIComponent(username)}`);
+	},
 }
 export default samba;
