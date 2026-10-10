@@ -237,7 +237,17 @@ export default {
 		 */
 		async getList () {
 			try {
-				const orgAppList = await this.$openAPI.appGrid.getAppGrid().then(res => res.data.data || [])
+				// a failing app grid (e.g. Docker not running yet) must not hide the
+				// built-in and link apps: show those, retry the grid
+				let gridFailed = false
+				const orgAppList = await this.$openAPI.appGrid
+					.getAppGrid()
+					.then(res => res.data.data || [])
+					.catch(error => {
+						console.error(error)
+						gridFailed = true
+						return []
+					})
 				let orgOldAppList = [],
 					orgNewAppList = []
 				orgAppList.forEach(item => {
@@ -279,28 +289,37 @@ export default {
 
 				const sortedList = sortedAppList.map(obj => obj.name)
 				this.appList = sortedAppList
-				if (!isEqual(lateSortList, sortedList)) {
+				// without the grid's apps, saving would drop them from the user's order
+				if (!gridFailed && !isEqual(lateSortList, sortedList)) {
 					this.saveSortData()
 				}
 
 				this.isLoading = false
-				this.retryCount = 0
-				this.appListErrorMessage = ''
+				if (gridFailed) {
+					this.retryList()
+				} else {
+					this.retryCount = 0
+					this.appListErrorMessage = ''
+				}
 			} catch (error) {
 				console.error(error)
 				this.isLoading = true
-				if (this.retryCount < 5) {
-					setTimeout(() => {
-						this.retryCount++
-						this.getList()
-					}, 2000)
-				} else {
-					this.appListErrorMessage = 'Failed to get app list.'
-					this.$buefy.toast.open({
-						message: this.$t(`Failed to load apps, please refresh later.`),
-						type: 'is-danger'
-					})
-				}
+				this.retryList()
+			}
+		},
+
+		retryList () {
+			if (this.retryCount < 5) {
+				setTimeout(() => {
+					this.retryCount++
+					this.getList()
+				}, 2000)
+			} else {
+				this.appListErrorMessage = 'Failed to get app list.'
+				this.$buefy.toast.open({
+					message: this.$t(`Failed to load apps, please refresh later.`),
+					type: 'is-danger'
+				})
 			}
 		},
 
